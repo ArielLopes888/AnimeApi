@@ -1,4 +1,5 @@
 using Infra.Context;
+using Infra.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Service.Interfaces;
@@ -35,7 +36,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
-
+// Injeção de dependência
+builder.Services.AddScoped<IAnimeRepository, AnimeRepository>();
 builder.Services.AddScoped<IAnimeService, AnimeService>();
 
 var app = builder.Build();
