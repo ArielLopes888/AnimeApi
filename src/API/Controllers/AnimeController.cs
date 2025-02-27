@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Domain.Entities;
 using Service.Interfaces;
+using Service.DTOs;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace API.Controllers
 {
@@ -30,32 +32,48 @@ namespace API.Controllers
             var anime = await _animeService.GetAnimeByIdAsync(id);
             if (anime == null)
             {
-                return NotFound();
+                return NotFound("Anime não encontrado.");
             }
             return Ok(anime);
         }
 
+        // GET: api/anime/search
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<AnimeDto>>> SearchAnimes(
+            [FromQuery] int? id,
+            [FromQuery] string? name,
+            [FromQuery] string? director)
+        {
+            var animes = await _animeService.GetAnimesByFilterAsync(id, name, director);
+
+            if (animes == null || !animes.Any())
+                return NotFound("Nenhum anime encontrado com os critérios informados.");
+
+            return Ok(animes);
+        }
+
         // POST: api/anime
         [HttpPost]
-        public async Task<ActionResult<Anime>> CreateAnime(Anime anime)
+        public async Task<ActionResult<Anime>> CreateAnimeAsync([FromBody]AnimeDto animeDto)
         {
-            var createdAnime = await _animeService.CreateAnimeAsync(anime);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var createdAnime = await _animeService.CreateAnimeAsync(animeDto);
             return CreatedAtAction(nameof(GetAnimeById), new { id = createdAnime.Id }, createdAnime);
         }
 
         // PUT: api/anime/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAnime(int id, Anime anime)
+        public async Task<IActionResult> UpdateAnime(int id, [FromBody] AnimeDto animeDto)
         {
-            if (id != anime.Id)
-            {
-                return BadRequest();
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var updatedAnime = await _animeService.UpdateAnimeAsync(anime);
-            if (updatedAnime == null)
+            var updatedAnime = await _animeService.UpdateAnimeAsync(id, animeDto);
+            if (!updatedAnime)
             {
-                return NotFound();
+                return NotFound("Anime não encontrado.");
             }
 
             return NoContent();
@@ -68,7 +86,7 @@ namespace API.Controllers
             var isDeleted = await _animeService.DeleteAnimeAsync(id);
             if (!isDeleted)
             {
-                return NotFound();
+                return NotFound("Anime não encontrado.");
             }
 
             return NoContent();
