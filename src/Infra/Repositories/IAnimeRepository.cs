@@ -12,8 +12,8 @@ namespace Infra.Repositories
         Task<IEnumerable<Anime>> GetAllAnimesAsync();
         Task<Anime?> GetAnimeByIdAsync(int id);
         Task<IEnumerable<Anime>> GetAnimesByFilterAsync(int? id, string? name, string? director);
-        Task CreateAnimeAsync(Anime anime);
-        Task UpdateAnimeAsync(Anime anime);
-        Task<bool> DeleteAnimeAsync(int id);
+        Task<Anime> CreateAnimeAsync(Anime anime);
+        Task<bool> UpdateAnimeAsync(Anime anime);
+        Task<bool> DeleteAnimeAsync(Anime anime);
     }
 }

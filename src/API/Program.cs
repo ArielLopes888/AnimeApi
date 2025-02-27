@@ -2,16 +2,21 @@ using Infra.Context;
 using Infra.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Service.Interfaces;
-using Service.Services;
-using System.Diagnostics;
+using Service.MediatR.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Injeção de dependência
+builder.Services.AddScoped<IAnimeRepository, AnimeRepository>();
+
+// Registro do MediatR - Procura automaticamente os Handlers na solução
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetAllAnimesQueryHandler).Assembly));
+
+builder.Logging.AddConsole();
 
 // Adicionar o DbContext ao contêiner de serviços
 builder.Services.AddDbContext<AnimeDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 
 
 // Add services to the container.
@@ -34,11 +39,6 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-
-
-// Injeção de dependência
-builder.Services.AddScoped<IAnimeRepository, AnimeRepository>();
-builder.Services.AddScoped<IAnimeService, AnimeService>();
 
 var app = builder.Build();
 
