@@ -43,26 +43,25 @@ namespace Infra.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task CreateAnimeAsync(Anime anime)
+        public async Task<Anime> CreateAnimeAsync(Anime anime)
         {
             await _context.Animes.AddAsync(anime);
             await _context.SaveChangesAsync();
+            return anime; 
         }
 
-        public async Task UpdateAnimeAsync(Anime anime)
+        public async Task<bool> UpdateAnimeAsync(Anime anime)
         {
             _context.Animes.Update(anime);
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync() >0;
         }
 
 
-        public async Task<bool> DeleteAnimeAsync(int id)
+        public async Task<bool> DeleteAnimeAsync(Anime anime)
         {
-            var anime = await _context.Animes.FindAsync(id);
-            if (anime == null) return false;
             _context.Animes.Remove(anime);
             await _context.SaveChangesAsync();
-            return true;
+            return await _context.SaveChangesAsync() > 0;
         }
 
     }
