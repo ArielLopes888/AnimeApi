@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  api:
+    image: animeapi:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=AnimeDb;User=sa;Password=12345@AAb;TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=True;
+    depends_on:
+      - db
+    command: >
+      /bin/sh -c "
+      dotnet ef database update --no-build &&
+      dotnet API.dll"
+    networks:
+      - app-network
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=12345@AAb
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

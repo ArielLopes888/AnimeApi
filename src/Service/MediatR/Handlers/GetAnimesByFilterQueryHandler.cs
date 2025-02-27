@@ -23,7 +23,8 @@ namespace Service.MediatR.Handlers
             {
                 Id = a.Id,
                 Name = a.Name,
-                Director = a.Director
+                Director = a.Director,
+                Summary = a.Summary
             });
         }
     }

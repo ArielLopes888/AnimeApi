@@ -26,7 +26,8 @@ namespace Application.Handlers
             {
                 Id = anime.Id,
                 Name = anime.Name,
-                Director = anime.Director
+                Director = anime.Director,
+                Summary = anime.Summary
             };
         }
     }
