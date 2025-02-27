@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Injeção de dependência
 builder.Services.AddScoped<IAnimeRepository, AnimeRepository>();
 
-// Registro do MediatR - Procura automaticamente os Handlers na solução
+// Registro do MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetAllAnimesQueryHandler).Assembly));
 
 builder.Logging.AddConsole();
@@ -49,7 +49,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Anime API v1");
-        //c.RoutePrefix = string.Empty; 
     });
 }
 

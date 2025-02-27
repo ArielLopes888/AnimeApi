@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infra.Repositories;
+﻿using Infra.Repositories;
 using MediatR;
 using Service.DTOs;
-using Service.Interfaces; 
 using Service.MediatR.Queries;
 
 namespace Service.MediatR.Handlers
