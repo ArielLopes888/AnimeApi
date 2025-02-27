@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Infra.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -59,9 +54,9 @@ namespace Infra.Repositories
 
         public async Task<bool> DeleteAnimeAsync(Anime anime)
         {
-            _context.Animes.Remove(anime);
-            await _context.SaveChangesAsync();
-            return await _context.SaveChangesAsync() > 0;
+            _context.Animes.Remove(anime); 
+            var result = await _context.SaveChangesAsync();  
+            return result > 0; 
         }
 
     }

@@ -113,7 +113,7 @@ namespace API.Controllers
                     return NotFound("Anime não encontrado.");
                 }
 
-                return NoContent();
+                return StatusCode(200, "Alterado com sucesso");
             }
             catch (Exception ex)
             {
@@ -128,19 +128,35 @@ namespace API.Controllers
         {
             try
             {
-                var isDeleted = await _mediator.Send(new DeleteAnimeCommand(id));
-                if (!isDeleted)
+      
+                var anime = await _mediator.Send(new GetAnimeByIdQuery(id));
+
+                if (anime == null)
                 {
+                   
                     return NotFound("Anime não encontrado.");
                 }
 
-                return NoContent();
+         
+                var isDeleted = await _mediator.Send(new DeleteAnimeCommand(id));
+
+           
+                if (isDeleted)
+                {
+              
+                    return StatusCode(200, "Apagado com sucesso!");
+                }
+
+                
+                return StatusCode(500, "Erro ao tentar apagar o anime.");
             }
             catch (Exception ex)
             {
+                
                 _logger.LogError(ex, "Erro ao excluir anime.");
                 return StatusCode(500, "Erro interno no servidor.");
             }
+
         }
     }
 }

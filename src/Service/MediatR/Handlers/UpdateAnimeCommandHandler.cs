@@ -1,6 +1,5 @@
 ﻿using Infra.Repositories;
 using MediatR;
-using Service.Interfaces;
 using Service.MediatR.Commands;
 
 
